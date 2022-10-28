@@ -22,3 +22,16 @@ Automated integrity testing of data with python.
 
 3. Referential Integrity
   - Foreign Key 
+
+# Usage (hopefully)
+
+```python
+
+s = Subject(driver, db_name, table_name)
+
+age = s.num('age')
+age.in_range((0, 119))
+
+patient_id = s.id('patient_id')
+
+```
