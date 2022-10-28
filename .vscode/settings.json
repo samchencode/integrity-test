@@ -1,8 +1,12 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.formatOnSave": true
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter"
     },
     "python.formatting.provider": "none",
-    "python.linting.pylintEnabled": true
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "mypy.dmypyExecutable": "C:\\Users\\chensa\\.virtualenvs\\integrity-test-qRcS1Fl5\\Scripts\\dmypy.exe"
 }
