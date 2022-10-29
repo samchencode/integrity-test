@@ -23,10 +23,10 @@ def fixture_ch_engine(request):
     [
         (
             65535,
-            "SELECT count() FROM my_table WHERE my_col != 65535 ",
+            "SELECT count() FROM my_table WHERE my_col != 65535",
             [[0]],
         ),
-        (Null, "SELECT count() FROM my_table WHERE my_col IS NOT NULL ", [[0]]),
+        (Null, "SELECT count() FROM my_table WHERE my_col IS NOT NULL", [[0]]),
     ],
     indirect=["ch_engine"],
 )
@@ -45,8 +45,8 @@ def test_num_is_missing(
 @pytest.mark.parametrize(
     "missing_value, sql, ch_engine",
     [
-        (65535, "SELECT count() FROM my_table WHERE my_col = 65535 ", [[0]]),
-        (Null, "SELECT count() FROM my_table WHERE my_col IS NULL ", [[0]]),
+        (65535, "SELECT count() FROM my_table WHERE my_col = 65535", [[0]]),
+        (Null, "SELECT count() FROM my_table WHERE my_col IS NULL", [[0]]),
     ],
     indirect=["ch_engine"],
 )

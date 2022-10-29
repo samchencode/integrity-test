@@ -47,14 +47,14 @@ class MissingFactory:
             sql_esc_missing_val = "'" + missing_value + "'"
         return driver.run_sql(
             f"SELECT count() FROM {table_name} "
-            f"WHERE {column_name} != {sql_esc_missing_val} "
+            f"WHERE {column_name} != {sql_esc_missing_val}"
         )
 
     def _sql_check_missing_null(
         self, driver: Driver, table_name: str, column_name: str
     ):
         return driver.run_sql(
-            f"SELECT count() FROM {table_name} " f"WHERE {column_name} IS NOT NULL "
+            f"SELECT count() FROM {table_name} " f"WHERE {column_name} IS NOT NULL"
         )
 
 
@@ -98,7 +98,7 @@ class NotMissingFactory:
             sql_esc_missing_val = "'" + missing_value + "'"
         res = driver.run_sql(
             f"SELECT count() FROM {table_name} "
-            f"WHERE {column_name} = {sql_esc_missing_val} "
+            f"WHERE {column_name} = {sql_esc_missing_val}"
         )
         print(res)
         return res
@@ -110,5 +110,5 @@ class NotMissingFactory:
         column_name: str,
     ):
         return driver.run_sql(
-            f"SELECT count() FROM {table_name} " f"WHERE {column_name} IS NULL "
+            f"SELECT count() FROM {table_name} " f"WHERE {column_name} IS NULL"
         )
