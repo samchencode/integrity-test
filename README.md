@@ -35,3 +35,8 @@ age.in_range((0, 119))
 patient_id = s.id('patient_id')
 
 ```
+
+# Ideas to add
+
+1. Check if all values in column (except null? idk) are unique
+2. Check categorical columns have at least one of each possible value...
