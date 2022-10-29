@@ -163,7 +163,7 @@ class NotInRangeNumericFactory:
     ):
         return driver.run_sql(
             f"SELECT count() FROM {table_name} "
-            f"WHERE {column_name} >= {value_min} OR {column_name} < {value_max}"
+            f"WHERE {column_name} >= {value_min} AND {column_name} < {value_max}"
         )
 
     def _sql_check_in_range_missing_null(
@@ -177,7 +177,7 @@ class NotInRangeNumericFactory:
         return driver.run_sql(
             f"SELECT count() FROM {table_name} "
             f"WHERE {column_name} IS NOT NULL "
-            f"AND ({column_name} >= {value_min} OR {column_name} < {value_max})"
+            f"AND ({column_name} >= {value_min} AND {column_name} < {value_max})"
         )
 
     def _sql_check_in_range_missing_value(
@@ -195,5 +195,5 @@ class NotInRangeNumericFactory:
         return driver.run_sql(
             f"SELECT count() FROM {table_name} "
             f"WHERE {column_name} != {sql_esc_missing_val} "
-            f"AND ({column_name} >= {value_min} OR {column_name} < {value_max})"
+            f"AND ({column_name} >= {value_min} AND {column_name} < {value_max})"
         )

@@ -105,19 +105,19 @@ def test_num_in_range(
         (
             (0, 1),
             None,
-            "SELECT count() FROM my_table WHERE my_col >= 0 OR my_col < 1",
+            "SELECT count() FROM my_table WHERE my_col >= 0 AND my_col < 1",
             [[0]],
         ),
         (
             (-1.0, 1.0),
             Null,
-            "SELECT count() FROM my_table WHERE my_col IS NOT NULL AND (my_col >= -1.0 OR my_col < 1.0)",
+            "SELECT count() FROM my_table WHERE my_col IS NOT NULL AND (my_col >= -1.0 AND my_col < 1.0)",
             [[0]],
         ),
         (
             (-1.0, 1.0),
             999,
-            "SELECT count() FROM my_table WHERE my_col != 999 AND (my_col >= -1.0 OR my_col < 1.0)",
+            "SELECT count() FROM my_table WHERE my_col != 999 AND (my_col >= -1.0 AND my_col < 1.0)",
             [[0]],
         ),
     ],
