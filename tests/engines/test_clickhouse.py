@@ -1,20 +1,21 @@
 from unittest.mock import MagicMock
 import pytest
-from integrity_test.engines.clickhouse import engine, driver
+from integrity_test.engines.clickhouse.engine import ClickhouseEngine
+from integrity_test.engines.clickhouse.driver import StubDriver
 from integrity_test.null import Null
 
 
 def test_instantiation():
-    d = driver.StubDriver()
-    engine.ClickhouseEngine(d)
+    d = StubDriver()
+    ClickhouseEngine(d)
 
 
 @pytest.fixture(scope="function", name="ch_engine")
 def fixture_ch_engine(request):
-    d = driver.StubDriver()
+    d = StubDriver()
     d.run_sql = MagicMock(return_value=request.param)
     d.run_sql.reset_mock()
-    ch = engine.ClickhouseEngine(d)
+    ch = ClickhouseEngine(d)
     return ch, d.run_sql
 
 
@@ -31,7 +32,7 @@ def fixture_ch_engine(request):
     indirect=["ch_engine"],
 )
 def test_num_is_missing(
-    missing_value, sql, ch_engine: tuple[engine.ClickhouseEngine, MagicMock]
+    missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.num("my_table", "my_col")
@@ -51,7 +52,7 @@ def test_num_is_missing(
     indirect=["ch_engine"],
 )
 def test_num_not_missing(
-    missing_value, sql, ch_engine: tuple[engine.ClickhouseEngine, MagicMock]
+    missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.num("my_table", "my_col")
