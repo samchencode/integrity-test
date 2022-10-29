@@ -1,4 +1,3 @@
-from integrity_test.engines.clickhouse.test_factories import missing
 from ....null import NullType
 from .util import make_test_name
 from .protocols import ClickHouseTest
