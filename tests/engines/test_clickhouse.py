@@ -1,13 +1,13 @@
 from unittest.mock import MagicMock
 import pytest
-from integrity_test.engines.clickhouse.engine import ClickhouseEngine
+from integrity_test.engines.clickhouse.engine import ClickHouseEngine
 from integrity_test.engines.clickhouse.driver import StubDriver
 from integrity_test.null import Null
 
 
 def test_instantiation():
     d = StubDriver()
-    ClickhouseEngine(d)
+    ClickHouseEngine(d)
 
 
 @pytest.fixture(scope="function", name="ch_engine")
@@ -15,7 +15,7 @@ def fixture_ch_engine(request):
     d = StubDriver()
     d.run_sql = MagicMock(return_value=request.param)
     d.run_sql.reset_mock()
-    ch = ClickhouseEngine(d)
+    ch = ClickHouseEngine(d)
     return ch, d.run_sql
 
 
@@ -32,7 +32,7 @@ def fixture_ch_engine(request):
     indirect=["ch_engine"],
 )
 def test_num_is_missing(
-    missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+    missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.num("my_table", "my_col")
@@ -52,7 +52,7 @@ def test_num_is_missing(
     indirect=["ch_engine"],
 )
 def test_num_not_missing(
-    missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+    missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.num("my_table", "my_col")
@@ -88,7 +88,7 @@ def test_num_not_missing(
     indirect=["ch_engine"],
 )
 def test_num_in_range(
-    value_range, missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+    value_range, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.num("my_table", "my_col")
@@ -124,7 +124,7 @@ def test_num_in_range(
     indirect=["ch_engine"],
 )
 def test_num_not_in_range(
-    value_range, missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+    value_range, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.num("my_table", "my_col")
@@ -154,7 +154,7 @@ def test_num_not_in_range(
     indirect=["ch_engine"],
 )
 def test_date_in_range(
-    value_range, missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+    value_range, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.date("my_table", "my_col")
@@ -184,11 +184,41 @@ def test_date_in_range(
     indirect=["ch_engine"],
 )
 def test_date_not_in_range(
-    value_range, missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+    value_range, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
 ):
     ch, d_run_sql_spy = ch_engine
     my_col = ch.date("my_table", "my_col")
     my_col.n.in_range(value_range, missing_value)
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "values, missing_value, sql, ch_engine",
+    [
+        (
+            ["foo", "bar"],
+            None,
+            "SELECT count() FROM my_table WHERE my_col NOT IN ('foo', 'bar')",
+            [[0]],
+        ),
+        (
+            ["foo", "bar", "baz"],
+            Null,
+            "SELECT count() FROM my_table WHERE my_col IS NOT NULL AND my_col NOT IN ('foo', 'bar', 'baz')",
+            [[0]],
+        ),
+    ],
+    indirect=["ch_engine"],
+)
+def test_cat_one_of(
+    values, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
+):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.cat("my_table", "my_col")
+    my_col.one_of(values, missing_value)
     [res] = ch.run_tests()
 
     d_run_sql_spy.assert_called_once_with(sql)
