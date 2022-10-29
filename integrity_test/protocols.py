@@ -19,7 +19,7 @@ class NumericColumn(Column, Protocol):
     def in_range(
         self,
         value_range: tuple[int | float, int | float],
-        missing_value: int | str | NullType,
+        missing_value: int | str | NullType | None,
     ):
         ...
 
@@ -36,7 +36,9 @@ class DateColumn(Column, Protocol):
     def missing(self, missing_value: str):
         ...
 
-    def in_range(self, value_range: tuple[str, str], missing_value: str):
+    def in_range(
+        self, value_range: tuple[str, str], missing_value: str | NullType | None = None
+    ):
         ...
 
 

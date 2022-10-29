@@ -133,3 +133,63 @@ def test_num_not_in_range(
 
     d_run_sql_spy.assert_called_once_with(sql)
     assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "value_range, missing_value, sql, ch_engine",
+    [
+        (
+            ("1970-01-01", "2149-06-06"),
+            None,
+            "SELECT count() FROM my_table WHERE my_col < '1970-01-01' OR my_col >= '2149-06-06'",
+            [[0]],
+        ),
+        (
+            ("1970-01-01", "2149-06-06"),
+            "1925-01-01",
+            "SELECT count() FROM my_table WHERE my_col != '1925-01-01' AND (my_col < '1970-01-01' OR my_col >= '2149-06-06')",
+            [[0]],
+        ),
+    ],
+    indirect=["ch_engine"],
+)
+def test_date_in_range(
+    value_range, missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.date("my_table", "my_col")
+    my_col.in_range(value_range, missing_value)
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "value_range, missing_value, sql, ch_engine",
+    [
+        (
+            ("1970-01-01", "2149-06-06"),
+            None,
+            "SELECT count() FROM my_table WHERE my_col >= '1970-01-01' AND my_col < '2149-06-06'",
+            [[0]],
+        ),
+        (
+            ("1970-01-01", "2149-06-06"),
+            "1925-01-01",
+            "SELECT count() FROM my_table WHERE my_col != '1925-01-01' AND (my_col >= '1970-01-01' AND my_col < '2149-06-06')",
+            [[0]],
+        ),
+    ],
+    indirect=["ch_engine"],
+)
+def test_date_not_in_range(
+    value_range, missing_value, sql, ch_engine: tuple[ClickhouseEngine, MagicMock]
+):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.date("my_table", "my_col")
+    my_col.n.in_range(value_range, missing_value)
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()
