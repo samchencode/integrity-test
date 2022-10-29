@@ -54,7 +54,7 @@ class CategoricalColumn(Column, Protocol):
     def missing(self, missing_value: str):
         ...
 
-    def one_of(self, values: list[str]):
+    def one_of(self, values: list[str], missing_value: str | NullType | None = None):
         ...
 
 
