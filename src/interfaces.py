@@ -93,19 +93,19 @@ class IsCharChecker(CharChecker, Protocol):
 
 
 class Engine(Protocol):
-    def num(self, column_name: str) -> IsNumericChecker:
+    def num(self, table_name: str, column_name: str) -> IsNumericChecker:
         ...
 
-    def cat(self, column_name: str) -> IsCategoricalChecker:
+    def cat(self, table_name: str, column_name: str) -> IsCategoricalChecker:
         ...
 
-    def id(self, column_name: str) -> IsIdChecker:
+    def id(self, table_name: str, column_name: str) -> IsIdChecker:
         ...
 
-    def date(self, column_name: str) -> IsDateChecker:
+    def date(self, table_name: str, column_name: str) -> IsDateChecker:
         ...
 
-    def char(self, column_name: str) -> IsCharChecker:
+    def char(self, table_name: str, column_name: str) -> IsCharChecker:
         ...
 
     def get_tests(self) -> list[Test]:
