@@ -87,7 +87,7 @@ class CharColumn(Column, Protocol):
     def missing(self, missing_value: str):
         ...
 
-    def match(self, pattern=str):
+    def match(self, pattern: str):
         ...
 
 
