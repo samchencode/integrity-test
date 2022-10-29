@@ -1,7 +1,7 @@
 from integrity_test.test_result import TestResult
 from .checker import ClickHouseNumericChecker
 from .driver import Driver
-from ...interfaces import (
+from ...protocols import (
     IsCategoricalChecker,
     IsIdChecker,
     IsCharChecker,

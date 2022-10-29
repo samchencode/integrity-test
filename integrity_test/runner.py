@@ -1,5 +1,5 @@
 from .table import Table
-from .interfaces import Engine
+from .protocols import Engine
 
 
 class Runner:

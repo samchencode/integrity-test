@@ -1,5 +1,5 @@
 from integrity_test.test_result import TestResult
-from .interfaces import (
+from .protocols import (
     Engine,
     IsNumericChecker,
     IsCategoricalChecker,
