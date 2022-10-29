@@ -223,3 +223,33 @@ def test_cat_one_of(
 
     d_run_sql_spy.assert_called_once_with(sql)
     assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "values, missing_value, sql, ch_engine",
+    [
+        (
+            ["foo", "bar"],
+            None,
+            "SELECT count() FROM my_table WHERE my_col IN ('foo', 'bar')",
+            [[0]],
+        ),
+        (
+            ["foo", "bar", "baz"],
+            Null,
+            "SELECT count() FROM my_table WHERE my_col IS NOT NULL AND my_col IN ('foo', 'bar', 'baz')",
+            [[0]],
+        ),
+    ],
+    indirect=["ch_engine"],
+)
+def test_cat_not_one_of(
+    values, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
+):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.cat("my_table", "my_col")
+    my_col.n.one_of(values, missing_value)
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()
