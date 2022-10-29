@@ -6,12 +6,12 @@ T = TypeVar("T")
 Test = Callable[[T], TestResult]
 
 
-class Checker(Protocol, Generic[T]):
+class Column(Protocol, Generic[T]):
     def get_tests(self) -> list[Test[T]]:
         ...
 
 
-class NumericChecker(Checker, Protocol):
+class NumericColumn(Column, Protocol):
     def missing(self, missing_value: int | str | None):
         ...
 
@@ -23,15 +23,15 @@ class NumericChecker(Checker, Protocol):
         ...
 
 
-class NotNumericChecker(NumericChecker, Protocol):
+class NotNumericColumn(NumericColumn, Protocol):
     ...
 
 
-class IsNumericChecker(NumericChecker, Protocol):
-    n: NotNumericChecker
+class IsNumericColumn(NumericColumn, Protocol):
+    n: NotNumericColumn
 
 
-class DateChecker(Checker, Protocol):
+class DateColumn(Column, Protocol):
     def missing(self, missing_value: str):
         ...
 
@@ -39,15 +39,15 @@ class DateChecker(Checker, Protocol):
         ...
 
 
-class NotDateChecker(DateChecker, Protocol):
+class NotDateColumn(DateColumn, Protocol):
     ...
 
 
-class IsDateChecker(DateChecker, Protocol):
-    n: NotDateChecker
+class IsDateColumn(DateColumn, Protocol):
+    n: NotDateColumn
 
 
-class CategoricalChecker(Checker, Protocol):
+class CategoricalColumn(Column, Protocol):
     def missing(self, missing_value: str):
         ...
 
@@ -55,15 +55,15 @@ class CategoricalChecker(Checker, Protocol):
         ...
 
 
-class NotCategoricalChecker(CategoricalChecker, Protocol):
+class NotCategoricalColumn(CategoricalColumn, Protocol):
     ...
 
 
-class IsCategoricalChecker(CategoricalChecker, Protocol):
-    n: NotCategoricalChecker
+class IsCategoricalColumn(CategoricalColumn, Protocol):
+    n: NotCategoricalColumn
 
 
-class IdChecker(Checker, Protocol):
+class IdColumn(Column, Protocol):
     def missing(self, missing_value: str):
         ...
 
@@ -74,15 +74,15 @@ class IdChecker(Checker, Protocol):
         ...
 
 
-class NotIdChecker(IdChecker, Protocol):
+class NotIdColumn(IdColumn, Protocol):
     ...
 
 
-class IsIdChecker(IdChecker, Protocol):
-    n: NotIdChecker
+class IsIdColumn(IdColumn, Protocol):
+    n: NotIdColumn
 
 
-class CharChecker(Checker, Protocol):
+class CharColumn(Column, Protocol):
     def missing(self, missing_value: str):
         ...
 
@@ -90,28 +90,28 @@ class CharChecker(Checker, Protocol):
         ...
 
 
-class NotCharChecker(CharChecker, Protocol):
+class NotCharColumn(CharColumn, Protocol):
     ...
 
 
-class IsCharChecker(CharChecker, Protocol):
-    n: NotCharChecker
+class IsCharColumn(CharColumn, Protocol):
+    n: NotCharColumn
 
 
 class Engine(Protocol):
-    def num(self, table_name: str, column_name: str) -> IsNumericChecker:
+    def num(self, table_name: str, column_name: str) -> IsNumericColumn:
         ...
 
-    def cat(self, table_name: str, column_name: str) -> IsCategoricalChecker:
+    def cat(self, table_name: str, column_name: str) -> IsCategoricalColumn:
         ...
 
-    def id(self, table_name: str, column_name: str) -> IsIdChecker:
+    def id(self, table_name: str, column_name: str) -> IsIdColumn:
         ...
 
-    def date(self, table_name: str, column_name: str) -> IsDateChecker:
+    def date(self, table_name: str, column_name: str) -> IsDateColumn:
         ...
 
-    def char(self, table_name: str, column_name: str) -> IsCharChecker:
+    def char(self, table_name: str, column_name: str) -> IsCharColumn:
         ...
 
     def run_tests(self) -> list[TestResult]:

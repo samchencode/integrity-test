@@ -1,15 +1,15 @@
 from integrity_test.test_result import TestResult
-from .checker import ClickHouseNumericChecker
+from .numeric import ClickHouseNumericColumn
 from .driver import Driver
 from ...protocols import (
-    IsCategoricalChecker,
-    IsIdChecker,
-    IsCharChecker,
-    IsDateChecker,
-    Checker,
+    IsCategoricalColumn,
+    IsIdColumn,
+    IsCharColumn,
+    IsDateColumn,
+    Column,
 )
 
-ClickhouseChecker = Checker[Driver]
+ClickhouseChecker = Column[Driver]
 
 
 class ClickhouseEngine:
@@ -17,21 +17,21 @@ class ClickhouseEngine:
         self.driver: Driver = driver
         self.checkers: list[ClickhouseChecker] = []
 
-    def num(self, table_name: str, column_name: str) -> ClickHouseNumericChecker:
-        checker = ClickHouseNumericChecker(table_name, column_name)
+    def num(self, table_name: str, column_name: str) -> ClickHouseNumericColumn:
+        checker = ClickHouseNumericColumn(table_name, column_name)
         self.checkers.append(checker)
         return checker
 
-    def cat(self, table_name: str, column_name: str) -> IsCategoricalChecker:
+    def cat(self, table_name: str, column_name: str) -> IsCategoricalColumn:
         pass
 
-    def id(self, table_name: str, column_name: str) -> IsIdChecker:
+    def id(self, table_name: str, column_name: str) -> IsIdColumn:
         pass
 
-    def date(self, table_name: str, column_name: str) -> IsDateChecker:
+    def date(self, table_name: str, column_name: str) -> IsDateColumn:
         pass
 
-    def char(self, table_name: str, column_name: str) -> IsCharChecker:
+    def char(self, table_name: str, column_name: str) -> IsCharColumn:
         pass
 
     def run_tests(self) -> list[TestResult]:

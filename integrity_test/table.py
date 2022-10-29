@@ -1,11 +1,11 @@
 from integrity_test.test_result import TestResult
 from .protocols import (
     Engine,
-    IsNumericChecker,
-    IsCategoricalChecker,
-    IsIdChecker,
-    IsDateChecker,
-    IsCharChecker,
+    IsNumericColumn,
+    IsCategoricalColumn,
+    IsIdColumn,
+    IsDateColumn,
+    IsCharColumn,
 )
 
 
@@ -14,19 +14,19 @@ class Table:
         self._engine: Engine = engine
         self._table_name: str = table_name
 
-    def num(self, column_name: str) -> IsNumericChecker:
+    def num(self, column_name: str) -> IsNumericColumn:
         return self._engine.num(self._table_name, column_name)
 
-    def cat(self, column_name: str) -> IsCategoricalChecker:
+    def cat(self, column_name: str) -> IsCategoricalColumn:
         return self._engine.cat(self._table_name, column_name)
 
-    def id(self, column_name: str) -> IsIdChecker:
+    def id(self, column_name: str) -> IsIdColumn:
         return self._engine.id(self._table_name, column_name)
 
-    def date(self, column_name: str) -> IsDateChecker:
+    def date(self, column_name: str) -> IsDateColumn:
         return self._engine.date(self._table_name, column_name)
 
-    def char(self, column_name: str) -> IsCharChecker:
+    def char(self, column_name: str) -> IsCharColumn:
         return self._engine.char(self._table_name, column_name)
 
     def run_tests(self) -> list[TestResult]:
