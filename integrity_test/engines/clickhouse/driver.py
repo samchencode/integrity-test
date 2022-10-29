@@ -4,7 +4,7 @@ from clickhouse_driver import Client as ClickHouse
 
 
 class Driver(Protocol):
-    def executeSql(self, sql: str, params: dict) -> np.ndarray:
+    def run_sql(self, sql: str, params: dict = None) -> np.ndarray:
         ...
 
     def destroy(self):
@@ -22,8 +22,16 @@ class ClickHouseDriver:
             url=url, port=port, database=database, settings={"use_numpy": True}
         )
 
-    def executeSql(self, sql: str, params: dict) -> np.ndarray:
+    def run_sql(self, sql: str, params: dict = None) -> np.ndarray:
         return self.client.execute(sql, params)
 
     def destroy(self):
         self.client.disconnect()
+
+
+class StubDriver:
+    def run_sql(self, sql: str, params: dict = None) -> np.ndarray:
+        pass
+
+    def destroy(self):
+        pass

@@ -1,44 +1,48 @@
-from typing import Protocol, Callable
+from typing import Protocol, Callable, Generic, TypeVar
 from .test_result import TestResult
 
-Test = Callable[[], TestResult]
+T = TypeVar("T")
+
+Test = Callable[[T], TestResult]
 
 
-class Checker(Protocol):
-    def _get_tests(self) -> list[Test]:
+class Checker(Protocol, Generic[T]):
+    def get_tests(self) -> list[Test[T]]:
         ...
 
 
 class NumericChecker(Checker, Protocol):
-    def missing(self, missing_value: int):
+    def missing(self, missing_value: int | str):
         ...
 
-    def in_range(self, value_range: tuple[int | float, int | float], na_value: str):
+    def in_range(
+        self, value_range: tuple[int | float, int | float], missing_value: int | str
+    ):
         ...
 
 
-class IsntNumericChecker(NumericChecker, Protocol):
+class NotNumericChecker(NumericChecker, Protocol):
     ...
 
 
 class IsNumericChecker(NumericChecker, Protocol):
-    isnt: IsntNumericChecker
+    n: NotNumericChecker
 
 
 class DateChecker(Checker, Protocol):
     def missing(self, missing_value: str):
         ...
 
-    def in_range(self, value_range: tuple[str, str], na_value: str):
+    def in_range(self, value_range: tuple[str, str], missing_value: str):
         ...
 
 
-class IsntDateChecker(DateChecker, Protocol):
+class NotDateChecker(DateChecker, Protocol):
     ...
 
 
 class IsDateChecker(DateChecker, Protocol):
-    isnt: IsntDateChecker
+    n: NotDateChecker
 
 
 class CategoricalChecker(Checker, Protocol):
@@ -49,12 +53,12 @@ class CategoricalChecker(Checker, Protocol):
         ...
 
 
-class IsntCategoricalChecker(CategoricalChecker, Protocol):
+class NotCategoricalChecker(CategoricalChecker, Protocol):
     ...
 
 
 class IsCategoricalChecker(CategoricalChecker, Protocol):
-    isnt: IsntCategoricalChecker
+    n: NotCategoricalChecker
 
 
 class IdChecker(Checker, Protocol):
@@ -68,12 +72,12 @@ class IdChecker(Checker, Protocol):
         ...
 
 
-class IsntIdChecker(IdChecker, Protocol):
+class NotIdChecker(IdChecker, Protocol):
     ...
 
 
 class IsIdChecker(IdChecker, Protocol):
-    isnt: IsntIdChecker
+    n: NotIdChecker
 
 
 class CharChecker(Checker, Protocol):
@@ -84,12 +88,12 @@ class CharChecker(Checker, Protocol):
         ...
 
 
-class IsntCharChecker(CharChecker, Protocol):
+class NotCharChecker(CharChecker, Protocol):
     ...
 
 
 class IsCharChecker(CharChecker, Protocol):
-    isnt: IsntCharChecker
+    n: NotCharChecker
 
 
 class Engine(Protocol):
@@ -108,8 +112,8 @@ class Engine(Protocol):
     def char(self, table_name: str, column_name: str) -> IsCharChecker:
         ...
 
-    def get_tests(self) -> list[Test]:
+    def run_tests(self) -> list[TestResult]:
         ...
 
-    def destroy(self):
+    def __del__(self):
         ...

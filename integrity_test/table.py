@@ -1,3 +1,4 @@
+from integrity_test.test_result import TestResult
 from .interfaces import (
     Engine,
     IsNumericChecker,
@@ -28,12 +29,8 @@ class Table:
     def char(self, column_name: str) -> IsCharChecker:
         return self._engine.char(self._table_name, column_name)
 
-    def run(self):
-        tests = self._engine.get_tests()
-        results = [t() for t in tests]
-        for r in results:
-            if not r.has_test_passed():
-                print(r.get_message())
-            else:
-                print("All Green!")
-        self._engine.destroy()
+    def run_tests(self) -> list[TestResult]:
+        return self._engine.run_tests()
+
+    def get_name(self):
+        return self._table_name
