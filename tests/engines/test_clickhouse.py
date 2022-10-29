@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 import pytest
 from integrity_test.engines.clickhouse import engine, driver
+from integrity_test.null import Null
 
 
 def test_instantiation():
@@ -25,7 +26,7 @@ def fixture_ch_engine(request):
             "SELECT count() FROM my_table WHERE my_col != 65535 ",
             [[0]],
         ),
-        (None, "SELECT count() FROM my_table WHERE my_col IS NOT NULL ", [[0]]),
+        (Null, "SELECT count() FROM my_table WHERE my_col IS NOT NULL ", [[0]]),
     ],
     indirect=["ch_engine"],
 )
@@ -45,7 +46,7 @@ def test_num_is_missing(
     "missing_value, sql, ch_engine",
     [
         (65535, "SELECT count() FROM my_table WHERE my_col = 65535 ", [[0]]),
-        (None, "SELECT count() FROM my_table WHERE my_col IS NULL ", [[0]]),
+        (Null, "SELECT count() FROM my_table WHERE my_col IS NULL ", [[0]]),
     ],
     indirect=["ch_engine"],
 )

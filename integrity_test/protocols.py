@@ -1,5 +1,6 @@
 from typing import Protocol, Callable, Generic, TypeVar
 from .test_result import TestResult
+from .null import NullType
 
 T = TypeVar("T")
 
@@ -12,13 +13,13 @@ class Column(Protocol, Generic[T]):
 
 
 class NumericColumn(Column, Protocol):
-    def missing(self, missing_value: int | str | None):
+    def missing(self, missing_value: int | str | NullType):
         ...
 
     def in_range(
         self,
         value_range: tuple[int | float, int | float],
-        missing_value: int | str | None,
+        missing_value: int | str | NullType,
     ):
         ...
 

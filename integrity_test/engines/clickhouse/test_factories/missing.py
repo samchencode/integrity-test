@@ -1,4 +1,5 @@
 from .protocols import ClickHouseTest
+from ....null import NullType
 from ....test_result import TestResult
 from ..driver import Driver
 from .util import make_test_name
@@ -6,7 +7,7 @@ from .util import make_test_name
 
 class MissingFactory:
     def make_test(
-        self, table_name: str, column_name: str, missing_value: int | str | None
+        self, table_name: str, column_name: str, missing_value: int | str | NullType
     ) -> ClickHouseTest:
         def test(driver: Driver) -> TestResult:
             test_name = make_test_name(table_name, column_name, "is_missing")
@@ -18,7 +19,7 @@ class MissingFactory:
                     self._sql_check_missing_value(
                         driver, table_name, column_name, missing_value
                     )
-                    if missing_value is not None
+                    if not isinstance(missing_value, NullType)
                     else self._sql_check_missing_null(driver, table_name, column_name)
                 )
             except Exception as e:
@@ -59,7 +60,7 @@ class MissingFactory:
 
 class NotMissingFactory:
     def make_test(
-        self, table_name: str, column_name: str, missing_value: int | str | None
+        self, table_name: str, column_name: str, missing_value: int | str | NullType
     ) -> ClickHouseTest:
         def test(driver: Driver) -> TestResult:
             test_name = make_test_name(table_name, column_name, "not.is_missing")
@@ -71,7 +72,7 @@ class NotMissingFactory:
                     self._sql_check_missing_value(
                         driver, table_name, column_name, missing_value
                     )
-                    if missing_value is not None
+                    if not isinstance(missing_value, NullType)
                     else self._sql_check_missing_null(driver, table_name, column_name)
                 )
             except Exception as e:
