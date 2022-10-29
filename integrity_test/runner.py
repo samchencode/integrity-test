@@ -17,6 +17,6 @@ class Runner:
             print("Table Name: " + t.get_name())
             for res in t.run_tests():
                 pf = "Pass" if res.has_test_passed() else "Fail"
-                print(f"{res.get_name} - {pf} {res.get_message()}")
+                print(f"{res.get_name()} - {pf} {res.get_message()}")
 
         del self._engine
