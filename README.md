@@ -26,17 +26,20 @@ Automated integrity testing of data with python.
 # Usage (hopefully)
 
 ```python
+from integrity_test.runner import Runner
+from integrity_test.engines.clickhouse import driver, engine
 
-s = Subject(driver, db_name, table_name)
+d = driver.ClickHouseDriver(database="old")
+e = engine.ClickHouseEngine(d)
+runner = Runner(e)
 
-age = s.num('age')
-age.in_range((0, 119))
+patients = runner.table("patients")
 
-patient_id = s.id('patient_id')
-
+patient_id = patients.id("patient_id")
+patient_id.unique()
+patient_id.n.missing("")
 ```
 
 # Ideas to add
 
-1. Check if all values in column (except null? idk) are unique
-2. Check categorical columns have at least one of each possible value...
+1. Check categorical columns have at least one of each possible value...
