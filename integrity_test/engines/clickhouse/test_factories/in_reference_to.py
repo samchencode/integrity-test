@@ -33,5 +33,5 @@ class InReferenceToFactory(TestFactory):
             f"SELECT count() FROM {table_name} AS a "
             f"LEFT ANY JOIN {other_table_name} AS b "
             f"ON a.{column_name} = b.{other_column_name} "
-            f"WHERE a.{column_name} = ''"
+            f"WHERE b.{column_name} = ''"
         )
