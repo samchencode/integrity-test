@@ -1,3 +1,4 @@
+from .character import ClickhouseCharColumn
 from .id import ClickHouseIdColumn
 from .categorical import ClickHouseCategoricalColumn
 from .date import ClickHouseDateColumn
@@ -42,10 +43,12 @@ class ClickHouseEngine:
         return column
 
     def char(self, table_name: str, column_name: str) -> IsCharColumn:
-        pass
+        column = ClickhouseCharColumn(table_name, column_name)
+        self.columns.append(column)
+        return column
 
     def run_tests(self) -> list[TestResult]:
         return [t(self.driver) for checker in self.columns for t in checker.get_tests()]
 
     def __del__(self):
-        pass
+        del self.driver

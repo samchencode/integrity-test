@@ -1,3 +1,4 @@
+from importlib.util import decode_source
 from unittest.mock import MagicMock
 import pytest
 from integrity_test.engines.clickhouse.engine import ClickHouseEngine
@@ -311,4 +312,76 @@ def test_id_in_reference_to(
     [res] = ch.run_tests()
 
     d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "pattern, missing_value, sql, ch_engine",
+    [
+        (
+            "%%my_pattern",
+            None,
+            "SELECT count() FROM my_table WHERE my_col NOT LIKE '%%my_pattern'",
+            [[0]],
+        ),
+        (
+            "%%my_pattern",
+            Null,
+            "SELECT count() FROM my_table WHERE my_col NOT LIKE '%%my_pattern' AND my_col IS NOT NULL",
+            [[0]],
+        ),
+        (
+            "%%my_pattern",
+            "NA",
+            "SELECT count() FROM my_table WHERE my_col NOT LIKE '%%my_pattern' AND my_col != 'NA'",
+            [[0]],
+        ),
+    ],
+    indirect=["ch_engine"],
+)
+def test_char_match(
+    pattern, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
+):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.char("my_table", "my_col")
+    my_col.match(pattern, missing_value)
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_any_call(sql)
+    assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "pattern, missing_value, sql, ch_engine",
+    [
+        (
+            "%%my_pattern",
+            None,
+            "SELECT count() FROM my_table WHERE my_col LIKE '%%my_pattern'",
+            [[0]],
+        ),
+        (
+            "%%my_pattern",
+            Null,
+            "SELECT count() FROM my_table WHERE my_col LIKE '%%my_pattern' AND my_col IS NOT NULL",
+            [[0]],
+        ),
+        (
+            "%%my_pattern",
+            "NA",
+            "SELECT count() FROM my_table WHERE my_col LIKE '%%my_pattern' AND my_col != 'NA'",
+            [[0]],
+        ),
+    ],
+    indirect=["ch_engine"],
+)
+def test_char_not_match(
+    pattern, missing_value, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
+):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.char("my_table", "my_col")
+    my_col.n.match(pattern, missing_value)
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_any_call(sql)
     assert res.has_test_passed()

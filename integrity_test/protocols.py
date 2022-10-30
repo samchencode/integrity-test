@@ -1,6 +1,6 @@
 from typing import Protocol, Callable, Generic, TypeVar
 from .test_result import TestResult
-from .null import NullType
+from .null import Null, NullType
 
 T = TypeVar("T")
 
@@ -86,10 +86,10 @@ class IsIdColumn(IdColumn, Protocol):
 
 
 class CharColumn(Column, Protocol):
-    def missing(self, missing_value: str):
+    def missing(self, missing_value: str | NullType):
         ...
 
-    def match(self, pattern: str):
+    def match(self, pattern: str, missing_value: str | NullType | None = None):
         ...
 
 
