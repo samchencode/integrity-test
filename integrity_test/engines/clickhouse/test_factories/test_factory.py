@@ -1,6 +1,5 @@
 from typing import Callable
 from abc import ABC
-import numpy as np
 from ..driver import Driver
 from ....test_result import TestResult
 from .util import make_test_name
