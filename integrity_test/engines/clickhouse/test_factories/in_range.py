@@ -199,7 +199,7 @@ class NotInRangeNumericFactory:
         )
 
 
-class InRangeDateFactory:
+class InRangeCharFactory:
     def make_test(
         self,
         table_name: str,
@@ -293,7 +293,7 @@ class InRangeDateFactory:
         )
 
 
-class NotInRangeDateFactory:
+class NotInRangeCharFactory:
     def make_test(
         self,
         table_name: str,

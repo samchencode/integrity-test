@@ -92,6 +92,11 @@ class CharColumn(Column, Protocol):
     def match(self, pattern: str, missing_value: str | NullType | None = None):
         ...
 
+    def in_range(
+        self, value_range: tuple[str, str], missing_value: str | NullType | None = None
+    ):
+        ...
+
 
 class NotCharColumn(CharColumn, Protocol):
     ...

@@ -15,7 +15,7 @@ class NotClickHouseDateColumn(ClickHouseColumn):
         value_range: tuple[str, str],
         missing_value: str | NullType | None = None,
     ):
-        factory = in_range.NotInRangeDateFactory()
+        factory = in_range.NotInRangeCharFactory()
         value_min, value_max = value_range
         test = factory.make_test(
             self._table_name, self._column_name, value_min, value_max, missing_value
@@ -38,7 +38,7 @@ class ClickHouseDateColumn(ClickHouseColumn):
         value_range: tuple[str, str],
         missing_value: str | NullType | None = None,
     ):
-        factory = in_range.InRangeDateFactory()
+        factory = in_range.InRangeCharFactory()
         value_min, value_max = value_range
         test = factory.make_test(
             self._table_name, self._column_name, value_min, value_max, missing_value

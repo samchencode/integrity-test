@@ -1,5 +1,5 @@
 from ...protocols import NotCharColumn
-from .test_factories import missing, match
+from .test_factories import missing, match, in_range
 from ...null import NullType
 from .column import ClickHouseColumn
 
@@ -14,6 +14,18 @@ class NotClickhouseCharColumn(ClickHouseColumn):
         factory = match.NotMatchCharFactory()
         test = factory.make_test(
             self._table_name, self._column_name, pattern, missing_value
+        )
+        self._tests.append(test)
+
+    def in_range(
+        self,
+        value_range: tuple[str, str],
+        missing_value: str | NullType | None = None,
+    ):
+        factory = in_range.NotInRangeCharFactory()
+        value_min, value_max = value_range
+        test = factory.make_test(
+            self._table_name, self._column_name, value_min, value_max, missing_value
         )
         self._tests.append(test)
 
@@ -32,6 +44,18 @@ class ClickhouseCharColumn(ClickHouseColumn):
         factory = match.MatchCharFactory()
         test = factory.make_test(
             self._table_name, self._column_name, pattern, missing_value
+        )
+        self._tests.append(test)
+
+    def in_range(
+        self,
+        value_range: tuple[str, str],
+        missing_value: str | NullType | None = None,
+    ):
+        factory = in_range.InRangeCharFactory()
+        value_min, value_max = value_range
+        test = factory.make_test(
+            self._table_name, self._column_name, value_min, value_max, missing_value
         )
         self._tests.append(test)
 
