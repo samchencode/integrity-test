@@ -66,7 +66,7 @@ class OneOfCategoricalFactory:
         sql_values_str = ", ".join([f"'{v}'" for v in values])
         return driver.run_sql(
             f"SELECT count() FROM {table_name} "
-            f"WHERE {column_name} != {missing_value} "
+            f"WHERE {column_name} != '{missing_value}' "
             f"AND {column_name} NOT IN ({sql_values_str})"
         )
 

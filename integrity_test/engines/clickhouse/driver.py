@@ -19,7 +19,7 @@ class ClickHouseDriver:
         port: int = 1234,
     ):
         self.client = ClickHouse(
-            url=url, port=port, database=database, settings={"use_numpy": True}
+            url, port=port, database=database, settings={"use_numpy": True}
         )
 
     def run_sql(self, sql: str, params: dict = None) -> np.ndarray:
