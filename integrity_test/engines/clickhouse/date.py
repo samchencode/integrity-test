@@ -1,15 +1,10 @@
 from ...protocols import NotDateColumn
 from .test_factories import missing, in_range
 from ...null import NullType
-from .test_factories.protocols import ClickHouseTest
+from .column import ClickHouseColumn
 
 
-class NotClickHouseDateColumn:
-    def __init__(self, table_name: str, column_name: str):
-        self._table_name = table_name
-        self._column_name = column_name
-        self._tests: list[ClickHouseTest] = []
-
+class NotClickHouseDateColumn(ClickHouseColumn):
     def missing(self, missing_value: str):
         factory = missing.NotMissingFactory()
         test = factory.make_test(self._table_name, self._column_name, missing_value)
@@ -27,15 +22,10 @@ class NotClickHouseDateColumn:
         )
         self._tests.append(test)
 
-    def get_tests(self):
-        return self._tests
 
-
-class ClickHouseDateColumn:
+class ClickHouseDateColumn(ClickHouseColumn):
     def __init__(self, table_name: str, column_name: str):
-        self._table_name = table_name
-        self._column_name = column_name
-        self._tests: list[ClickHouseTest] = []
+        super().__init__(table_name, column_name)
         self.n: NotDateColumn = NotClickHouseDateColumn(table_name, column_name)
 
     def missing(self, missing_value: str):

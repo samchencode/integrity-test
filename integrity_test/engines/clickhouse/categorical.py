@@ -1,15 +1,10 @@
 from ...protocols import NotCategoricalColumn
 from .test_factories import missing, one_of
 from ...null import NullType
-from .test_factories.protocols import ClickHouseTest
+from .column import ClickHouseColumn
 
 
-class NotClickHouseCategoricalColumn:
-    def __init__(self, table_name: str, column_name: str):
-        self._table_name = table_name
-        self._column_name = column_name
-        self._tests: list[ClickHouseTest] = []
-
+class NotClickHouseCategoricalColumn(ClickHouseColumn):
     def missing(self, missing_value: str):
         factory = missing.NotMissingFactory()
         test = factory.make_test(self._table_name, self._column_name, missing_value)
@@ -22,15 +17,10 @@ class NotClickHouseCategoricalColumn:
         )
         self._tests.append(test)
 
-    def get_tests(self):
-        return self._tests
 
-
-class ClickHouseCategoricalColumn:
+class ClickHouseCategoricalColumn(ClickHouseColumn):
     def __init__(self, table_name: str, column_name: str):
-        self._table_name = table_name
-        self._column_name = column_name
-        self._tests: list[ClickHouseTest] = []
+        super().__init__(table_name, column_name)
         self.n: NotCategoricalColumn = NotClickHouseCategoricalColumn(
             table_name, column_name
         )
