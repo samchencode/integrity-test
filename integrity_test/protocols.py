@@ -1,6 +1,6 @@
 from typing import Protocol, Callable, Generic, TypeVar
 from .test_result import TestResult
-from .null import Null, NullType
+from .null import NullType
 
 T = TypeVar("T")
 
