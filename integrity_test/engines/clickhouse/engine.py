@@ -1,3 +1,4 @@
+from .id import ClickHouseIdColumn
 from .categorical import ClickHouseCategoricalColumn
 from .date import ClickHouseDateColumn
 from ...test_result import TestResult
@@ -31,7 +32,9 @@ class ClickHouseEngine:
         return column
 
     def id(self, table_name: str, column_name: str) -> IsIdColumn:
-        pass
+        column = ClickHouseIdColumn(table_name, column_name)
+        self.columns.append(column)
+        return column
 
     def date(self, table_name: str, column_name: str) -> IsDateColumn:
         column = ClickHouseDateColumn(table_name, column_name)
@@ -42,7 +45,6 @@ class ClickHouseEngine:
         pass
 
     def run_tests(self) -> list[TestResult]:
-        print(self.columns[0].get_tests())
         return [t(self.driver) for checker in self.columns for t in checker.get_tests()]
 
     def __del__(self):

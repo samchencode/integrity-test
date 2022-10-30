@@ -73,9 +73,6 @@ class IdColumn(Column, Protocol):
     def unique(self):
         ...
 
-    def in_reference_to(self, table_name: str, column_name: str):
-        ...
-
 
 class NotIdColumn(IdColumn, Protocol):
     ...
@@ -83,6 +80,9 @@ class NotIdColumn(IdColumn, Protocol):
 
 class IsIdColumn(IdColumn, Protocol):
     n: NotIdColumn
+
+    def in_reference_to(self, table_name: str, column_name: str):
+        ...
 
 
 class CharColumn(Column, Protocol):

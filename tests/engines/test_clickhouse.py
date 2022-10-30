@@ -253,3 +253,38 @@ def test_cat_not_one_of(
 
     d_run_sql_spy.assert_called_once_with(sql)
     assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "sql, ch_engine",
+    [("SELECT count() FROM my_table GROUP BY my_col HAVING count() > 1 LIMIT 1", [])],
+    indirect=["ch_engine"],
+)
+def test_id_unique(sql, ch_engine: tuple[ClickHouseEngine, MagicMock]):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.id("my_table", "my_col")
+    my_col.unique()
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "sql, ch_engine",
+    [
+        (
+            "SELECT count() FROM my_table GROUP BY my_col HAVING count() > 1 LIMIT 1",
+            [[2]],
+        )
+    ],
+    indirect=["ch_engine"],
+)
+def test_id_not_unique(sql, ch_engine: tuple[ClickHouseEngine, MagicMock]):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.id("my_table", "my_col")
+    my_col.n.unique()
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()

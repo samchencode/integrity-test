@@ -100,7 +100,6 @@ class NotMissingFactory:
             f"SELECT count() FROM {table_name} "
             f"WHERE {column_name} = {sql_esc_missing_val}"
         )
-        print(res)
         return res
 
     def _sql_check_missing_null(
