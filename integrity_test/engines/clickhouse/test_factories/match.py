@@ -27,7 +27,7 @@ class MatchCharFactory(TestFactory):
                 )
 
             if result > 0:
-                raise Exception("{result} rows do not match!")
+                raise Exception(f"{result} rows do not match!")
 
         return self._make_test(table_name, column_name, "is_match", execute)
 
