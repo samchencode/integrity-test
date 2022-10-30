@@ -296,7 +296,7 @@ def test_id_not_unique(sql, ch_engine: tuple[ClickHouseEngine, MagicMock]):
         (
             "other_table",
             "other_col",
-            "SELECT count() FROM my_table AS a LEFT ANY JOIN other_table AS b ON a.my_col = b.other_col WHERE b.my_col = ''",
+            "SELECT count(DISTINCT a.my_col) FROM my_table AS a LEFT ANY JOIN other_table AS b ON a.my_col = b.other_col WHERE b.my_col = ''",
             [[0]],
         )
     ],
