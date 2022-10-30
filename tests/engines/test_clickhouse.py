@@ -288,3 +288,27 @@ def test_id_not_unique(sql, ch_engine: tuple[ClickHouseEngine, MagicMock]):
 
     d_run_sql_spy.assert_called_once_with(sql)
     assert res.has_test_passed()
+
+
+@pytest.mark.parametrize(
+    "tbl, col, sql, ch_engine",
+    [
+        (
+            "other_table",
+            "other_col",
+            "SELECT count() FROM my_table AS a LEFT ANY JOIN other_table AS b ON a.my_col = b.other_col WHERE a.my_col = ''",
+            [[0]],
+        )
+    ],
+    indirect=["ch_engine"],
+)
+def test_id_in_reference_to(
+    tbl, col, sql, ch_engine: tuple[ClickHouseEngine, MagicMock]
+):
+    ch, d_run_sql_spy = ch_engine
+    my_col = ch.id("my_table", "my_col")
+    my_col.in_reference_to(tbl, col)
+    [res] = ch.run_tests()
+
+    d_run_sql_spy.assert_called_once_with(sql)
+    assert res.has_test_passed()

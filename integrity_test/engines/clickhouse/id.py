@@ -1,5 +1,5 @@
 from integrity_test.protocols import NotIdColumn
-from .test_factories import missing, unique
+from .test_factories import missing, unique, in_reference_to
 from .column import ClickHouseColumn
 
 
@@ -31,7 +31,11 @@ class ClickHouseIdColumn(ClickHouseColumn):
         self._tests.append(test)
 
     def in_reference_to(self, table_name: str, column_name: str):
-        pass
+        factory = in_reference_to.InReferenceToFactory()
+        test = factory.make_test(
+            self._table_name, self._column_name, table_name, column_name
+        )
+        self._tests.append(test)
 
     def get_tests(self):
         return super().get_tests() + self.n.get_tests()
