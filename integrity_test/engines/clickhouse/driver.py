@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import Any, Protocol
 import numpy as np
 from clickhouse_driver import Client as ClickHouse
 
@@ -17,9 +17,14 @@ class ClickHouseDriver:
         database: str,
         url: str = "localhost",
         port: int = 1234,
+        settings: dict[str, Any] | None = None,
     ):
+        ch_settings = {"use_numpy": True}
+        if settings is not None:
+            ch_settings = {**ch_settings, **settings}
+
         self.client = ClickHouse(
-            url, port=port, database=database, settings={"use_numpy": True}
+            url, port=port, database=database, settings=ch_settings
         )
 
     def run_sql(self, sql: str, params: dict = None) -> np.ndarray:
