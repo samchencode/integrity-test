@@ -1,4 +1,3 @@
-from importlib.util import decode_source
 from unittest.mock import MagicMock
 import pytest
 from integrity_test.engines.clickhouse.engine import ClickHouseEngine
