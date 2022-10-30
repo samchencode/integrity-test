@@ -8,6 +8,7 @@ numpy = "*"
 clickhouse-driver = "*"
 mypy = "*"
 pytest-mock = "*"
+pandas = "*"
 
 [dev-packages]
 pytest = "*"
